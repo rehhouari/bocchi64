@@ -21,7 +21,7 @@ export default defineConfig({
 	vite: {
 		plugins: [
 			VitePWA({
-				registerType: "prompt",
+				registerType: "autoUpdate",
 				manifest,
 				workbox: {
 					globDirectory: 'dist',
