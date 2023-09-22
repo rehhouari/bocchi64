@@ -92,7 +92,7 @@
 					</template>
 					<!-- messages to files section -->
 					<template x-if="tab == 'tofile'">
-						<section class="w-full text-center">
+						<section class="w-full text-center flex-col space-y-2">
 							<p x-text="validFirstMessage?'Paste the rest of the messages':'Paste the first message'">
 							</p>
 							<p x-text="`1/${chunks+1?chunks+1:'#'}`" class="font-bold"></p>
