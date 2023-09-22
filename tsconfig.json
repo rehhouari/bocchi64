@@ -1,0 +1,21 @@
+{
+	"extends": "astro/tsconfigs/strict",
+	"compilerOptions": {
+		"strictPropertyInitialization": false,
+		"typeRoots": ["./node_modules/@types", "./src/types"],
+		"baseUrl": ".",
+		"lib": ["es5", "es6", "dom", "dom.iterable"],
+		"paths": {
+			"@sections": ["src/components/sections"],
+			"@components/*": ["src/components/*"],
+			"@style/*": ["src/styles/*"],
+			"@util/*": ["utils/*"],
+			"@img/*": ["src/assets/img/*"],
+			"@svg/*": ["src/assets/svg/*"],
+			"@icon/*": ["src/assets/svg/icon/*"],
+			"@modules/*": ["src/modules/*"],
+			"@layouts/*": ["src/layouts/*"],
+			"@src/*": ["src/*"]
+		}
+	}
+}

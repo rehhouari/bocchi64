@@ -1,0 +1,240 @@
+---
+// Component imports
+//@ts-ignore
+import { SEO } from "astro-seo"
+
+// Style imports
+import "@style/main.css"
+
+// Helper imports
+import { seoConfig } from "@util/seoConfig"
+
+// Props
+export interface Props {
+	/** Title of the page. */
+	title: string
+
+	/** Specific OpenGraph page title. */
+	ogTitle?: string
+
+	/** Description of the page. */
+	description?: string
+
+	/** Image thumbnail for the page. */
+	image?: {
+		url: string
+		alt: string
+	}
+
+	/** Whether or not to disable indexing */
+	disableIndexing?: boolean
+}
+
+const {
+	title,
+	ogTitle,
+	description,
+	image,
+	disableIndexing = false
+} = Astro.props as Props
+---
+
+<html lang="en" class="no-focus-outline">
+	<head>
+		<!-- SEO. -->
+		<SEO
+			title={title}
+			description={seoConfig.description || description}
+			noindex={disableIndexing}
+			nofollow={disableIndexing}
+			openGraph={{
+				basic: {
+					title: ogTitle || title,
+					type: "website",
+					image: seoConfig.image.url || image.url
+				},
+				image: {
+					width: seoConfig.image.width,
+					height: seoConfig.image.height,
+					alt: seoConfig.image.alt || image.alt
+				},
+				optional: {
+					siteName: seoConfig.siteName,
+					description: seoConfig.description || description
+				}
+			}}
+			twitter={{
+				//@ts-ignore
+				card: seoConfig.twitter.card
+			}}
+		/>
+
+		<!-- Global meta tags. -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<!-- Favicons. -->
+		<link
+			rel="apple-touch-icon"
+			sizes="57x57"
+			href="/favicons/favicon-57x57.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="60x60"
+			href="/favicons/favicon-60x60.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="72x72"
+			href="/favicons/favicon-72x72.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="76x76"
+			href="/favicons/favicon-76x76.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="114x114"
+			href="/favicons/favicon-114x114.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="120x120"
+			href="/favicons/favicon-120x120.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="144x144"
+			href="/favicons/favicon-144x144.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="152x152"
+			href="/favicons/favicon-152x152.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="/favicons/favicon-180x180.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="/favicons/favicon-16x16.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="/favicons/favicon-32x32.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="96x96"
+			href="/favicons/favicon-96x96.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="192x192"
+			href="/favicons/favicon-192x192.png"
+		/>
+		<link
+			rel="shortcut icon"
+			type="image/x-icon"
+			href="/favicons/favicon.ico"
+		/>
+		<link rel="icon" type="image/x-icon" href="/favicons/favicon.ico" />
+		<meta name="msapplication-TileColor" content="#30E130" />
+		<meta
+			name="msapplication-TileImage"
+			content="/favicons/favicon-144x144.png"
+		/>
+		<meta name="msapplication-config" content="/browserconfig.xml" />
+		<link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+		<meta name="theme-color" content="#30E130" />
+
+		<!-- Service worker registration. -->
+
+		<script is:inline src="/registerSW.js"></script>
+		<script>
+			// if (navigator.userAgent.includes('Instagram')) {
+			// 	const a = document.createElement('a')
+			// 	a.href = document.location.href
+			// 	a.target = '_blank'
+			// 	a.download = document.location.pathname
+			// 	a.click()
+			// }
+			/// Import Alpine.js
+			import Alpine from 'alpinejs'
+			/// Import Alpine.js plugins
+			//@ts-ignore
+			import focus from '@alpinejs/focus'
+			//@ts-ignore
+			import persist from '@alpinejs/persist'
+			//@ts-ignore
+			import Clipboard from "@ryangjchandler/alpine-clipboard"
+
+			/// Autoload all Alpine.js component data
+			const datas = import.meta.glob([
+				'../components/alpinejs/*.js',
+				'../components/alpinejs/*.ts',
+			])
+
+			for (const key in datas) {
+				if (Object.hasOwnProperty.call(datas, key)) {
+					const data: any = await datas[key]()
+					Alpine.data(
+						key.replace(/^.*[\/]|.[^/.]+$/g, ''),
+						data.default
+					)
+				}
+			}
+
+			/// load plugins
+			Alpine.plugin(focus)
+			Alpine.plugin(persist)
+			Alpine.plugin(Clipboard)
+			window.Alpine = Alpine
+			Alpine.start()
+			// allow focus outline when tabbing
+			document.body.addEventListener(
+				'keyup',
+				(e) =>
+					e.key === 'Tab' &&
+					document.documentElement.classList.remove(
+						'no-focus-outline'
+					)
+			)
+		</script>
+
+		<link rel="manifest" href="/manifest.webmanifest" />
+
+		<style>
+			a:hover {
+				text-decoration: underline
+			}
+		</style>
+	</head>
+	<body class="min-h-screen flex flex-col w-full overflow-x-hidden">
+		<main class="flex flex-1 flex-col h-[100%] w-full">
+			<slot />
+		</main>
+
+		<script>
+			// This is a hack to get vite-plugin-pwa to generate a sw.js file.
+			// Do not remove this script tag.
+		</script>
+		<footer class="flex flex-col text-center text-sm font-semibold items-center ">
+			<div class="flex flex-col space-y-4 w-full sm:w-lg max-w-lg justify-center p-4 bg-gray-200 text-center">
+				<p>{seoConfig.siteName}</p>
+				<p>{seoConfig.description}</p>
+				<p>Made by <a target="_blank" href="https://github.com/rehhouari">Rafik @rehhouari</a> <a  target="_blank" href="https://github.com/rehhouari/based64">(Source)</a></p>
+			</div>
+		</footer>
+	</body>
+</html>
