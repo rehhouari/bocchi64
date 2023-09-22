@@ -27,6 +27,8 @@
 	<meta name="msapplication-TileImage" content="/favicons/favicon-144x144.png" />
 	<meta name="msapplication-config" content="/browserconfig.xml" />
 	<meta name="theme-color" content="#4061A0" />
+	<link rel="preconnect" href="https://rsms.me/">
+	<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
 	<!-- Service worker registration. -->
 
@@ -81,6 +83,7 @@
 							<!-- results screen -->
 							<template x-if="results">
 								<div class="flex flex-col space-y-4 ">
+									<div class="text-center">Copy and send these 1 by one</div>
 									<template x-for="(message, i) in messages">
 										<div class="justify-center text-center space-y-4 flex flex-col">
 											<div x-text="addMetadata?message.split(';', 1):i+1" class="font-bold"></div>
