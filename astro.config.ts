@@ -30,7 +30,8 @@ export default defineConfig({
 					],
 					// Don't fallback on document based (e.g. `/some-page`) requests
 					// This removes an errant console.log message from showing up.
-					navigateFallback: "/",
+					navigateFallback: null,
+					directoryIndex: "/index.html"
 				},
 			})
 		]
