@@ -11,7 +11,7 @@ export default defineConfig({
 			manifest: {
 				name: "Bocchi64",
 				short_name: "Bocchi64",
-				theme_color: "#4061A0"
+				theme_color: "#4061A0",
 				icons: [
 					{
 						"src": "favicons/favicon-72x72.png",
