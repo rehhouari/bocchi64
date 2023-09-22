@@ -11,3 +11,4 @@ This metadata makes it less confusing when trying to decode many messages into o
 Instead of one text box, paste the first message, and it automatically add as many text boxes you need.
 
 Each of these text boxes will have a green border when the index of the pasted message is correct (make sure to click outside of the box after pasting for it to work).
+
