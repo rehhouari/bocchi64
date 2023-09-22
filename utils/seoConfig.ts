@@ -5,7 +5,7 @@ import type { ManifestOptions } from "vite-plugin-pwa"
  * Defines the default SEO configuration for the website.
  */
 export const seoConfig = {
-	baseURL: "https://bocchi64.github.io", // Change this to your production URL.
+	baseURL: "https://bocchi64.vercel.app", // Change this to your production URL.
 	description:
 		"Encode a file into multiple limited-length text messages and vice-versa.", // Change this to be your website's description.
 	type: "website",
