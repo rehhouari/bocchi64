@@ -21,7 +21,7 @@ export default defineConfig({
 	vite: {
 		plugins: [
 			VitePWA({
-				registerType: "autoUpdate",
+				registerType: "prompt",
 				manifest,
 				workbox: {
 					globDirectory: 'dist',
@@ -30,7 +30,7 @@ export default defineConfig({
 					],
 					// Don't fallback on document based (e.g. `/some-page`) requests
 					// This removes an errant console.log message from showing up.
-					navigateFallback: null,
+					navigateFallback: "/",
 				},
 			})
 		]
