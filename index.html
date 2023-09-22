@@ -1,0 +1,136 @@
+<html lang="en" class="no-focus-outline">
+
+<head>
+	<!-- Global meta tags. -->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="generator" content={Astro.generator} />
+	<!-- Favicons. -->
+	<link rel="apple-touch-icon" sizes="57x57" href="/favicons/favicon-57x57.png" />
+	<link rel="apple-touch-icon" sizes="60x60" href="/favicons/favicon-60x60.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="/favicons/favicon-72x72.png" />
+	<link rel="apple-touch-icon" sizes="76x76" href="/favicons/favicon-76x76.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="/favicons/favicon-114x114.png" />
+	<link rel="apple-touch-icon" sizes="120x120" href="/favicons/favicon-120x120.png" />
+	<link rel="apple-touch-icon" sizes="144x144" href="/favicons/favicon-144x144.png" />
+	<link rel="apple-touch-icon" sizes="152x152" href="/favicons/favicon-152x152.png" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-96x96.png" />
+	<link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png" />
+	<link rel="shortcut icon" type="image/x-icon" href="/favicons/favicon.ico" />
+	<link rel="icon" type="image/x-icon" href="/favicons/favicon.ico" />
+	<meta name="msapplication-TileColor" content="#30E130" />
+	<meta name="msapplication-TileImage" content="/favicons/favicon-144x144.png" />
+	<meta name="msapplication-config" content="/browserconfig.xml" />
+	<meta name="theme-color" content="#30E130" />
+
+	<!-- Service worker registration. -->
+
+	<script type="module" src="/src/main.js"></script>
+	<link rel="stylesheet" href="src/style.css">
+	<style>
+		a:hover {
+			text-decoration: underline
+		}
+	</style>
+</head>
+
+<body class="min-h-screen flex flex-col w-full overflow-x-hidden">
+	<main class="flex flex-1 flex-col h-[100%] w-full">
+		<div x-data="bocchi" class="flex-1 flex flex-col items-center">
+			<div class="flex flex-col space-y-8 justify-center w-full sm:w-lg max-w-lg mb-4 px-4 ">
+				<!-- tabs -->
+				<div class="flex flex-row justify-between font-semibold">
+					<button class="p-4 disabled:border-gray-600 border-gray-300 border-b-2  w-full"
+						:disabled="tab == 'tomessages'" @click="tab = 'tomessages'">File to messages</button>
+					<button class="p-4 disabled:border-gray-600 border-gray-300 border-b-2  w-full"
+						:disabled="tab == 'tofile'" @click="tab = 'tofile'">Messages to file</button>
+				</div>
+				<div class="flex">
+					<!-- file to messages section -->
+					<template x-if="tab == 'tomessages'">
+						<div class="w-full">
+							<!-- input screen -->
+							<template x-if="!results">
+								<div class="flex flex-col space-y-4 w-full">
+									<input type="file" name="fileinput" id=""
+										class="p-10 w-full rounded-lg bg-gray-600 text-white"
+										@change="fileSelected($event)">
+
+									<h2 class="text-center">Select max message length</h2>
+									<div class="flex justify-between items-stretch">
+										<button class="rounded bg-gray-600 text-white p-2 font-bold"
+											@click="messageLength = 5000">5KB</button>
+										<button class="rounded bg-gray-600 text-white p-2 font-bold"
+											@click="messageLength = 20000">20KB</button>
+										<input class="rounded bg-gray-600 text-white p-2 font-bold max-w-[8rem]!"
+											x-model="messageLength" placeholder="message length">
+									</div>
+									<div class="text-sm pt-4 flex items-center justify-between">
+										<label for="addmetadata">Add index metadata (KEEP THIS ON)</label>
+										<input id="addmetadata" type="checkbox" x-model="addMetadata">
+									</div>
+									<button x-show="selectedFile" class="rounded bg-gray-600 text-white p-2 font-bold"
+										@click="fileToMessages">Convert</button>
+								</div>
+							</template>
+							<!-- results screen -->
+							<template x-if="results">
+								<div class="flex flex-col space-y-4 ">
+									<template x-for="(message, i) in messages">
+										<div class="justify-center text-center space-y-4 flex flex-col">
+											<div x-text="addMetadata?message.split(';', 1):i+1" class="font-bold"></div>
+											<button @click="$clipboard(message)"
+												class="rounded bg-gray-600 text-white py-2 font-bold">Copy</button>
+										</div>
+									</template>
+								</div>
+							</template>
+						</div>
+					</template>
+					<!-- messages to files section -->
+					<template x-if="tab == 'tofile'">
+						<section class="w-full text-center">
+							<p x-text="validFirstMessage?'Paste the rest of the messages':'Paste the first message'">
+							</p>
+							<p x-text="`1/${chunks+1?chunks+1:'#'}`" class="font-bold"></p>
+							<textarea x-ref="firstmessage" @change="$el.scrollTop=0"
+								:class="validFirstMessage && 'border-green-500'"
+								class="w-full rounded border-2 border-gray-600 text-xs"></textarea>
+							<template x-for="i in chunks">
+								<div class="w-full">
+									<p x-show="chunks" class="font-bold" x-text="`${i+1}/${chunks+1}`"></p>
+									<textarea x-model="inputMessages[i]" @change="$el.scrollTop=0"
+										x-bind:class="validateMessage(i) &&'border-green-500!'"
+										class="w-full border-2 rounded border-red-500 text-xs"></textarea>
+								</div>
+							</template>
+							<button x-show="!validFirstMessage" class="rounded bg-gray-600 text-white p-2 font-bold"
+								@click="pastedFirstMessage($refs.firstmessage)">Validate first message</button>
+							<button x-show="validFirstMessage" class="rounded bg-gray-600 text-white p-2 font-bold"
+								@click="download">Download</button>
+						</section>
+					</template>
+				</div>
+				<button class="rounded bg-red-500 text-white p-2  font-bold" @click="clear">Reset</button>
+			</div>
+		</div>
+	</main>
+
+	<script>
+		// This is a hack to get vite-plugin-pwa to generate a sw.js file.
+		// Do not remove this script tag.
+	</script>
+	<footer class="flex flex-col text-center text-sm font-semibold items-center ">
+		<div class="flex flex-col space-y-4 w-full sm:w-lg max-w-lg justify-center p-4 bg-gray-200 text-center">
+			<p>Bocchi64</p>
+			<p>Encode a file into multiple limited-length text messages and vice-versa.</p>
+			<p>Made by <a target="_blank" href="https://github.com/rehhouari">Rafik @rehhouari</a> <a target="_blank"
+					href="https://github.com/rehhouari/based64">(Source)</a></p>
+		</div>
+	</footer>
+</body>
+
+</html>
