@@ -77,22 +77,26 @@ export default () => ({
 		// Split the Base64 data from the header (e.g., "data:image/png;base64,")
 		const parts = text.split(",");
 		const contentType = parts[0].split(":")[1].split(";")[0];
-		const data = atob(parts[1]);
+		try {
+			const data = atob(parts[1]);
+			const blob = new Blob(
+				[new Uint8Array(data.length).map((_, i) => data.charCodeAt(i))],
+				{
+					type: contentType,
+				}
+			);
 
-		const blob = new Blob(
-			[new Uint8Array(data.length).map((_, i) => data.charCodeAt(i))],
-			{
-				type: contentType,
-			}
-		);
-
-		const url = window.URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = "downloaded_file";
-		document.body.appendChild(a);
-		a.click();
-		window.URL.revokeObjectURL(url);
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "downloaded_file";
+			document.body.appendChild(a);
+			a.click();
+			window.URL.revokeObjectURL(url);
+		} catch (err) {
+			alert(err)
+			return
+		}
 	},
 	fileToMessages() {
 		this.results = true
