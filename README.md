@@ -12,3 +12,6 @@ Instead of one text box, paste the first message, and it automatically add as ma
 
 Each of these text boxes will have a green border when the index of the pasted message is correct (make sure to click outside of the box after pasting for it to work).
 
+**TODO**
+
+Add compression and decompression using https://stuk.github.io/jszip/ or something else
