@@ -1,5 +1,5 @@
 {
-	"name":"bocchi64",
+	"name": "bocchi64",
 	"version": "0.0.0",
 	"private": false,
 	"scripts": {
@@ -21,6 +21,7 @@
 		"@ryangjchandler/alpine-clipboard": "^2.2.0",
 		"@types/alpinejs": "^3.13.0",
 		"alpinejs": "^3.13.0",
+		"fflate": "^0.8.2",
 		"unocss": "^0.56.1",
 		"vite": "^4.5.2"
 	}
